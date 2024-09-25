@@ -2,6 +2,14 @@ class ClientSideRouter {
   constructor() {
     console.log("ClientSideRouter constructor");
     this.currentUrl = window.location.pathname;
+
+    if (typeof Mustache === 'undefined') {
+      console.error('Mustache is not defined');
+      return;
+    } else {
+      console.log('Mustache is defined:', Mustache);
+    }
+
     this.init();
   }
 
@@ -37,9 +45,6 @@ class ClientSideRouter {
 
       document.addEventListener('click', this.handleLinks.bind(this));
       console.log("Added click event listener");
-
-      // Log Mustache to debug loading issues
-      console.log('Mustache:', Mustache);
 
       await this.onLoad();
     } catch (error) {
@@ -231,6 +236,7 @@ class ClientSideRouter {
         const linkElement = document.createElement('link');
         linkElement.rel = 'stylesheet';
         linkElement.href = `${this.fileRoot}css/${style}`;
+        linkElement.type = 'text/css';
 
         document.head.appendChild(linkElement);
         console.log(`Stylesheet loaded: ${style}`);
@@ -260,6 +266,7 @@ class ClientSideRouter {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = fullPath;
+      link.type = 'text/css';
 
       link.onload = () => {
         console.log(`${fullPath} loaded successfully.`);
