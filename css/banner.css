@@ -1,7 +1,8 @@
-banner {
+.banner {
   width: 100%;
+  margin: 0 auto;
   text-align: center;
-  background-color: #aaa;bann 
+  background-color: #aaa;
 
   h1 {
     font-size: 3rem;
