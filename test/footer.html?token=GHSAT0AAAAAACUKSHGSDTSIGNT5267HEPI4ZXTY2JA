@@ -1,0 +1,5 @@
+{{#data}}
+<footer>
+  <p>{{{footer_content}}}</p>
+</footer>
+{{/data}}

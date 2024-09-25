@@ -1,0 +1,9 @@
+{
+    "use_cached": false,
+    "content_base": "https://raw.githubusercontent.com/abalter/attoweb2/refs/heads/main/content",
+    "template_base": "https://raw.githubusercontent.com/abalter/attoweb2/refs/heads/main/templates",
+    "plugins_base": "https://raw.githubusercontent.com/abalter/attoweb2/refs/heads/main/plugins",
+    "default_page": "default",
+    "default_css": [],
+    "default_js": []
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "slot": "banner" ,
+    "template": "banner.html",
+    "data": 
+    [
+      {
+        "title": "Dynamically Generated Website",
+        "tagline": "I did a cool thing!"
+      }
+    ],
+    "styles": "banner.css"
+  },
+  {
+    "slot": "footer",
+    "template": "footer.html",
+    "data": [{"footer_content" : "Website &copy; 2024. All rights reserved."}],
+    "styles": "footer.css"
+  },
+  {
+    "slot": "header", 
+    "template": "nav.html",
+    "data": 
+    [
+      {
+          "page_url": "home",
+          "page_name": "Home"
+      },
+      {
+          "page_url": "about",
+          "page_name": "About"
+      },
+      {
+          "page_url": "contact",
+          "page_name": "Contact"
+      },
+      {
+        "page_url": "blog",
+        "page_name": "Blog"
+      }
+    ],
+    "styles": ["style.css", "nav.css"]
+  }
+]
