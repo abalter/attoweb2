@@ -1,0 +1,67 @@
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  background-color: #f4f4f4;
+}
+
+article {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+}
+
+article h1 {
+  font-size: 24px;
+}
+
+.author {
+  font-style: italic;
+  color: #555;
+}
+
+.intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  /* Adds some space between the banner and intro sections */
+}
+
+.summary {
+  flex: 1;
+  padding-right: 20px;
+  /* Ensures there is space between the text and the image */
+}
+
+.intro-image img {
+  width: 300px;
+  /* Adjusts the size of the image */
+  height: auto;
+  display: block;
+  /* Ensures the image does not have extra space around it */
+  border-radius: 8px;
+  /* Optional: Adds rounded corners to the image */
+}
+
+.content h2 {
+  color: #333;
+  font-size: 20px;
+}
+
+.content p {
+  margin-top: 10px;
+}
+
+footer {
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #666;
+  background: #eee;
+  /* Adds a background color to the footer for distinction */
+}

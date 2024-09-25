@@ -1,0 +1,9 @@
+{
+    "use_cached": false,
+    "content_base": "content",
+    "template_base": "templates",
+    "plugins_base": "plugins",
+    "default_page": "default",
+    "default_css": [],
+    "default_js": []
+}

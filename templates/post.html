@@ -1,0 +1,19 @@
+{{#data}}
+<article>
+    <section>
+        <h1>{{title}}</h1>
+        <p class="author">By {{author}} | <time datetime="{{date_YMD}}">{{date_MDY}}</time></p>
+    </section>
+    <section class="intro">
+        <div class="summary">
+            <p>{{{summary}}}</p>
+        </div>
+        <div class="intro-image">
+            <img src="{{image}}" alt="{{image_alt_text}}">
+        </div>
+    </section>
+    <section class="content">
+        {{{content}}}
+    </section>
+</article>
+{{/data}}

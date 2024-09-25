@@ -1,0 +1,16 @@
+[
+  {
+    "slot": "main", 
+    "template": "home.html",
+    "data": {
+      "title": "Dynamically Generated Website",
+      "source_data": [
+        {
+          "content_name": "home_content",
+          "source": "home.md"
+        }
+      ]
+    },
+    "styles": "home.css"
+  }
+]

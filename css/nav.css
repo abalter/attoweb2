@@ -1,0 +1,33 @@
+nav {
+  grid-template-columns: 1fr;
+  display: grid;
+  justify-items: end;
+}
+
+nav ul {
+  float: right;
+  padding: 0.5em 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+}
+
+nav ul li:last-of-type {
+  margin-right: 1.5em;
+}
+
+nav ul li {
+  margin: 0;
+  margin-right: 0.5em;
+  padding: 0;
+  display: inline-block;
+}
+
+nav a {
+  display: inline-block;
+}
+
+nav .toggle,
+nav .drop {
+  display: none;
+}

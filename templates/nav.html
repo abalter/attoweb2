@@ -1,0 +1,10 @@
+<nav class="nav-sticky">
+    <ul></ul>
+    <label for="drop" class="toggle">MENU</label>
+    <input type="checkbox" class="drop" />
+    <ul class="menu">
+        {{#data}}
+        <li><a href="?page={{page_url}}">{{page_name}}</a></li>
+        {{/data}}
+    </ul>
+</nav>

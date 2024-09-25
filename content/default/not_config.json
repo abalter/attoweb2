@@ -1,0 +1,30 @@
+{
+  "slot": "body",
+  "template": "default.html",
+  "data": {
+    "nav_content": [
+      {
+          "page_url": "home",
+          "page_name": "Home"
+      },
+      {
+          "page_url": "about",
+          "page_name": "About"
+      },
+      {
+          "page_url": "contact",
+          "page_name": "Contact"
+      },
+      {
+        "page_url": "blog",
+        "page_name": "Blog"
+      }
+    ],
+    "header_content": {
+      "title": "Dynamically Generated Website",
+      "tagline": "I did a cool thing!"
+    },
+    "footer_content": "Website &copy; 2024"
+  },
+  "styles": ["global.css", "header.css", "footer.css", "nav.css"]
+}
