@@ -3,8 +3,7 @@
     "slot": "main", 
     "template": "home.html",
     "data": {
-      "title": "Dynamically Generated Website",
-      "source_data": [
+      "sources": [
         {
           "content_name": "home_content",
           "source": "home.md"

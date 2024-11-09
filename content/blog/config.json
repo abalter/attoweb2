@@ -1,0 +1,23 @@
+{
+  "slot": "main",
+  "template": "post.html",
+  "data": {
+    "sources": [
+      {
+        "content_name": "post",
+        "source": "post.md"
+      },
+      {
+        "content_name": "excerpt":
+        "source": "excerpt.md"
+      }
+    ]
+  },
+  "plugins": [
+    {
+      "path": "blog",
+      "css": "blog.css",
+      "js": "blog.js"
+    }
+  ]
+}
