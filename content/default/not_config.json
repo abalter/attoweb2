@@ -16,8 +16,8 @@
           "page_name": "Contact"
       },
       {
-        "page_url": "blog",
-        "page_name": "Blog"
+        "page_url": "articles",
+        "page_name": "Articles"
       }
     ],
     "header_content": {

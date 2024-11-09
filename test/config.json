@@ -35,8 +35,8 @@
           "page_name": "Contact"
       },
       {
-        "page_url": "blog",
-        "page_name": "Blog"
+        "page_url": "articles",
+        "page_name": "Articles"
       }
     ],
     "styles": ["style.css", "nav.css"]

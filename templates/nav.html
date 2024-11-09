@@ -4,7 +4,14 @@
     <input type="checkbox" class="drop" />
     <ul class="menu">
         {{#data}}
-        <li><a href="?page={{page_url}}">{{page_name}}</a></li>
+        <li>
+            <a href="?page={{page_url}}" class="{{#subpages}}toggle-submenu{{/subpages}}">{{page_name}}</a>
+                <ul class="submenu">
+                    {{#subpages}}
+                        <li><a href="?page={{page_url}}">{{page_name}}</a></li>
+                    {{/subpages}}
+                </ul>
+        </li>
         {{/data}}
     </ul>
 </nav>

@@ -33,9 +33,9 @@ class ClientSideRouter {
     }
 
     async init() {
-        console.log("ClientSideRouter init");
+        // console.log("ClientSideRouter init");
         this.globalConfig = await this.fetchFile("config.json", "json");
-        console.log("Fetched globalConfig:", this.globalConfig);
+        // console.log("Fetched globalConfig:", this.globalConfig);
 
         if (this.globalConfig) {
             let { file_root, content_base, template_base, plugins_base } = this.globalConfig;
@@ -114,11 +114,15 @@ class ClientSideRouter {
     }
 
     async handleLinks(event) {
+        console.log({event});
+
         const targetElement = event.target;
         if (targetElement.nodeName === 'A' && !this.isExternalLink(targetElement)) {
             event.preventDefault();
             const targetPage = new URL(targetElement.href).searchParams.get('page') || 'home';
-            if (window.location.search !== `?page=${targetPage}`) {
+            console.log({targetPage});
+            
+            if (window.location.search !== `?page=${targetPage}` && targetPage != "") {
                 await this.renderQuery(targetPage);
                 this.setActiveLink(targetPage);
                 window.history.pushState(null, '', `?page=${targetPage}`);
@@ -188,8 +192,8 @@ class ClientSideRouter {
     }
 
     async renderSlot({ slot, template, data, styles }, dir) {
-        console.log("renderSlot");
-        console.log({ slot, template, data, styles });
+        // console.log("renderSlot");
+        // console.log({ slot, template, data, styles });
 
         const slotElement = document.querySelector(slot);
         if (!slotElement) {
@@ -235,13 +239,13 @@ class ClientSideRouter {
     }
 
     async loadStylesheets(styles) {
-        console.log(`loadStylesheets: ${styles}`);
+        // console.log(`loadStylesheets: ${styles}`);
 
         styles = Array.isArray(styles) ? styles : [styles];
 
         try {
             styles.map(style => {
-                console.log(`Loading stylesheet: ${style}`);
+                // console.log(`Loading stylesheet: ${style}`);
 
                 const linkElement = document.createElement('link');
                 linkElement.rel = 'stylesheet';
@@ -249,7 +253,7 @@ class ClientSideRouter {
                 linkElement.type = 'text/css';
 
                 document.head.appendChild(linkElement);
-                console.log(`Stylesheet loaded: ${style}`);
+                // console.log(`Stylesheet loaded: ${style}`);
             });
         } catch (error) {
             console.error(`Error loading stylesheet: ${style}`, error);

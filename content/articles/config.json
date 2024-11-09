@@ -1,0 +1,15 @@
+{
+  "slot": "main",
+  "template": "article.html",
+  "data": {
+    "sources": [
+      {
+        "content_name": "content",
+        "source": "article.md"
+      }
+    ]
+  },
+  "plugins": [
+  ],
+  "styles": "article.css"
+}

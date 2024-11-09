@@ -1,9 +1,8 @@
 [
   {
-    "slot": ".banner" ,
+    "slot": ".banner",
     "template": "banner.html",
-    "data": 
-    [
+    "data": [
       {
         "title": "Dynamically Generated Website",
         "tagline": "I did a cool thing!"
@@ -14,31 +13,54 @@
   {
     "slot": "footer",
     "template": "footer.html",
-    "data": [{"footer_content" : "Website &copy; 2024. All rights reserved."}],
+    "data": [
+      {
+        "footer_content": "Website &copy; 2024. All rights reserved."
+      }
+    ],
     "styles": "footer.css"
   },
   {
-    "slot": "header", 
+    "slot": "header",
     "template": "nav.html",
-    "data": 
-    [
+    "data": [
       {
-          "page_url": "home",
-          "page_name": "Home"
+        "page_url": "home",
+        "page_name": "Home"
       },
       {
-          "page_url": "about",
-          "page_name": "About"
+        "page_url": "about",
+        "page_name": "About"
       },
       {
-          "page_url": "contact",
-          "page_name": "Contact"
+        "page_url": "gallery",
+        "page_name": "Gallery"
       },
       {
-        "page_url": "blog",
-        "page_name": "Blog"
+        "page_url": "?",
+        "page_name": "Articles",
+        "subpages": [
+          {
+            "page_url": "article1",
+            "page_name": "Article 1"
+          },
+          {
+            "page_url": "article2",
+            "page_name": "Article 2"
+          }
+        ]
       }
     ],
-    "styles": ["header.css", "footer.css", "nav.css", "style.css"]
+    "styles": [
+      "footer.css",
+      "nav.css",
+      "style.css"
+    ],
+    "plugins": [
+      {
+        "path": "menu_toggle_plugin",
+        "js": "plugin.js"
+      }
+    ]
   }
 ]
