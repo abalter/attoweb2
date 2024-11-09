@@ -1,0 +1,18 @@
+{
+    "slot": "nav",
+    "template": "nav.html",
+    "data": [
+        {
+            "page_name": "Home",
+            "page_url": "home"
+        },
+        {
+            "page_name": "Blog",
+            "page_url": "blog"
+        },
+        {
+            "page_name": "Gallery",
+            "page_url": "gallery"
+        }
+    ]
+}

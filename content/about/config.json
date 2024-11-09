@@ -1,0 +1,11 @@
+{
+  "slot": "main",
+  "template": "about.html",
+  "data": {
+    "sources": {
+      "source": "about.md",
+      "content_name": "content"
+    }
+  },
+  "styles": "about.css"
+}

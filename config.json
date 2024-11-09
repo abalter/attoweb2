@@ -1,6 +1,6 @@
 {
     "use_cached": false,
-    "file_root": "https://cdn.jsdelivr.net/gh/abalter/attoweb2",
+    "file_root": "",
     "content_base": "content",
     "template_base": "templates",
     "plugins_base": "plugins",

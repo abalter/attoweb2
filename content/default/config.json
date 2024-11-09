@@ -39,6 +39,6 @@
         "page_name": "Blog"
       }
     ],
-    "styles": ["style.css", "nav.css"]
+    "styles": ["header.css", "footer.css", "nav.css", "style.css"]
   }
 ]

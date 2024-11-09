@@ -66,6 +66,7 @@ class ClientSideRouter {
       console.log(`Rendering content for page: ${currentPage}`);
       await this.renderQuery(currentPage);
       this.setActiveLink(currentPage);
+      this.scrollToLocation();
     } catch (error) {
       console.error("Error during onLoad:", error);
     }

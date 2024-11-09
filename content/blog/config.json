@@ -4,12 +4,8 @@
   "data": {
     "sources": [
       {
-        "content_name": "post",
+        "content_name": "content",
         "source": "post.md"
-      },
-      {
-        "content_name": "excerpt":
-        "source": "excerpt.md"
       }
     ]
   },
@@ -19,5 +15,6 @@
       "css": "blog.css",
       "js": "blog.js"
     }
-  ]
+  ],
+  "styles": "post.css"
 }

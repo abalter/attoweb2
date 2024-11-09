@@ -32,10 +32,23 @@ article h1 {
   /* Adds some space between the banner and intro sections */
 }
 
-.summary {
-  flex: 1;
-  padding-right: 20px;
-  /* Ensures there is space between the text and the image */
+.summary:has(> blockquote) {
+  background-color: #ededed;
+  margin: 10px auto;
+  margin-right: 20px;
+  border-radius: 5px;
+}
+
+blockquote p::before {
+  content: '\201C';
+}
+
+blockquote p::after {
+  content: '\201D';
+}
+
+blockquote + p {
+  text-align: right;
 }
 
 .intro-image img {
