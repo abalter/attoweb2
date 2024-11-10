@@ -37,30 +37,14 @@
         "page_name": "Gallery"
       },
       {
-        "page_url": "?",
-        "page_name": "Articles",
-        "subpages": [
-          {
-            "page_url": "article1",
-            "page_name": "Article 1"
-          },
-          {
-            "page_url": "article2",
-            "page_name": "Article 2"
-          }
-        ]
+        "page_url": "article",
+        "page_name": "Article"
       }
     ],
     "styles": [
       "footer.css",
       "nav.css",
       "style.css"
-    ],
-    "plugins": [
-      {
-        "path": "menu_toggle_plugin",
-        "js": "plugin.js"
-      }
     ]
   }
 ]

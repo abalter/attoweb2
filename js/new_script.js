@@ -119,10 +119,8 @@ class ClientSideRouter {
         const targetElement = event.target;
         if (targetElement.nodeName === 'A' && !this.isExternalLink(targetElement)) {
             event.preventDefault();
-            const targetPage = new URL(targetElement.href).searchParams.get('page') || 'home';
-            console.log({targetPage});
-            
-            if (window.location.search !== `?page=${targetPage}` && targetPage != "") {
+            const targetPage = new URL(targetElement.href).searchParams.get('page') || 'home';            
+            if (window.location.search !== `?page=${targetPage}`) {
                 await this.renderQuery(targetPage);
                 this.setActiveLink(targetPage);
                 window.history.pushState(null, '', `?page=${targetPage}`);

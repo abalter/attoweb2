@@ -1,6 +1,7 @@
 footer {
-  width: 100% background-color: #aaa;
-
+  width: 100%;
+  background-color: #aaa;
+  
   p {
     color: purple;
     text-align: center;

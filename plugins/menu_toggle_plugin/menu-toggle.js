@@ -6,6 +6,7 @@ export default function menuTogglePlugin() {
         if (targetElement.classList.contains('toggle-submenu')) {
             console.log({targetElement});
             event.preventDefault();
+            event.stopPropagation(); // Prevent the event from propagating further
             const submenu = targetElement.nextElementSibling;
             if (submenu && submenu.classList.contains('submenu')) {
                 submenu.classList.toggle('visible');
