@@ -1,15 +1,4 @@
-/*
-//  Import libraries from CDN in ESM mode
-import Mustache from '../assets/mustache/mustache.js';
-import { marked } from '../assets/marked/marked.js';
-import { gfmHeadingId } from '../assets/marked-gfm-heading-id/marked-gfm-heading-id.js';
-// Import marked-custom-heading-id as the default export
-import customHeadingId from '../assets/marked-custom-heading-id/marked-custom-heading-id.js';
-import YAML from '../assets/js-yaml/js-yaml.js';
-*/
-
 // Import libraries from CDN
-// Some are the default export. Other's aren't.
 import Mustache from 'https://esm.run/mustache';
 import { marked } from 'https://esm.run/marked';
 import { gfmHeadingId } from 'https://esm.run/marked-gfm-heading-id';
@@ -21,210 +10,229 @@ const options = { /* custom options */ };
 marked.use(gfmHeadingId(options));
 marked.use(customHeadingId());
 marked.use({
-  breaks: true,
-  gfm: true,
+    breaks: true,
+    gfm: true,
 });
 
-
 class ClientSideRouter {
-  constructor() {
-    this.currentUrl = window.location.pathname;
-    this.init();
-  }
-
-  init() {
-    window.addEventListener('load', this.onLoad.bind(this));
-    window.addEventListener('popstate', this.onPopState.bind(this));
-    document.addEventListener('click', this.handleLinks.bind(this));
-  }
-
-  parseFrontmatter(markdown) {
-    // console.log(`parseFrontmatter: \n${markdown}`);
-    const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/.exec(markdown);
-    if (match) {
-      const frontmatter = YAML.load(match[1]);
-      const content = match[2];
-      return { frontmatter, content };
+    constructor() {
+        this.currentUrl = window.location.pathname;
+        this.init();
     }
-    return { frontmatter: {}, content: markdown };
-  }
 
-  async fetchMarkdownWithFrontmatter(sourceUrl, contentName) {
-    // console.log(`fetchMarkdownWithFrontmatter: ${sourceUrl}, ${contentName}`);
+    async init() {
+        this.globalConfig = await this.fetchFile("config.json", "json");
+        if (this.globalConfig) {
+            let { file_root, content_base, template_base, plugins_base } = this.globalConfig;
+            if (file_root !== "") {
+                file_root = `${file_root}/`;
+            }
+            this.fileRoot = file_root;
+            this.contentBase = `${file_root}${content_base}`;
+            this.templateBase = `${file_root}${template_base}`;
+            this.pluginsBase = `${file_root}${plugins_base}`;
+            console.log(`File root is set to: ${this.fileRoot}`); // Debug log
+        } else {
+            throw new Error("Failed to fetch globalConfig or globalConfig is null.");
+        }
 
-    const response = await fetch(sourceUrl);
-    const markdown = await response.text();
-        
-    const { frontmatter, content } = this.parseFrontmatter(markdown);
-    // console.log({frontmatter, content });
+        window.addEventListener('load', this.onLoad.bind(this));
+        window.addEventListener('popstate', this.onPopState.bind(this));
+        document.addEventListener('click', this.handleLinks.bind(this));
 
-    // let parsed = marked.parse(content);
-    // console.log({ parsed });
-
-    return { ...frontmatter, [contentName]: marked.parse(content) };
-  }
-
-  async onLoad() {
-    this.globalConfig = await this.fetchFile("config.json", "json");
-
-    // Load default content
-    await this.renderQuery('default');
-
-    const currentPage = this.getQueryParam('page') || 'home';
-    await this.renderQuery(currentPage);
-    this.setActiveLink(currentPage);
-    this.scrollToLocation();
-  }
-
-  scrollToLocation() {
-    const { hash } = window.location;
-    if (hash) {
-      const targetElement = document.querySelector(hash);
-      if (targetElement) {
-        const topPosition = document.querySelector('nav').offsetHeight;
-        const offsetPosition = targetElement.getBoundingClientRect().top + window.scrollY - topPosition;
-        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-      }
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        await this.onLoad();
     }
-  }
 
-  async onPopState() {
-    const pathQuery = this.getQueryParam('page') || 'home';
-    await this.renderQuery(pathQuery);
-    this.setActiveLink(pathQuery);
-    this.scrollToLocation();
-  }
+    async onLoad() {
+        console.log("onLoad triggered");
+        this.globalConfig = await this.fetchFile("config.json", "json");
+        await this.renderQuery('default');
+        this.onPopState();
+    }
 
-  async handleLinks(event) {
-    const targetElement = event.target;
-    if (targetElement.nodeName === 'A' && !this.isExternalLink(targetElement)) {
-      event.preventDefault();
-      const targetPage = new URL(targetElement.href).searchParams.get('page') || 'home';
-      if (window.location.search !== `?page=${targetPage}`) {
-        await this.renderQuery(targetPage);
-        this.setActiveLink(targetPage);
-        window.history.pushState(null, '', `?page=${targetPage}`);
+    async onPopState() {
+        console.log("onPopState triggered");
+        const pathQuery = this.getQueryParam('page') || 'home';
+        await this.renderQuery(pathQuery);
+        this.setActiveLink(pathQuery);
         this.scrollToLocation();
-        this.collapseMenu();
-      }
     }
-  }
 
-  collapseMenu() {
-    const dropCheckbox = document.getElementById('drop');
-    if (dropCheckbox && dropCheckbox.checked) {
-      dropCheckbox.checked = false;
-    }
-  }
-
-  isExternalLink(link) {
-    return new URL(link.href).host !== window.location.host;
-  }
-
-  getQueryParam(param) {
-    return new URLSearchParams(window.location.search).get(param);
-  }
-
-  setActiveLink(targetPage) {
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-      const hrefQuery = new URLSearchParams(link.getAttribute('href')).get('page');
-      link.classList.toggle('active', hrefQuery === targetPage);
-    });
-  }
-
-  async fetchFile(filePath, dataType = 'text') {
-    try {
-      const response = await fetch(filePath);
-      if (!response.ok) throw new Error(`Failed to fetch ${filePath}`);
-      return dataType === 'json' ? await response.json() : await response.text();
-    } catch (error) {
-      console.error(`Error fetching file: ${filePath}`, error);
-      return null;
-    }
-  }
-
-
-  async renderQuery(path) {
-    // console.log(`renderQuery: ${path}`);
-
-    const contentDir = `content/${path}`;
-    const config = await this.fetchFile(`${contentDir}/config.json`, 'json');
-
-    // Check if the config is a single object and wrap it in an array if needed
-    const configArray = Array.isArray(config) ? config : [config];
-
-    // Process each configuration entry in the array
-    for (const slotConfig of configArray) {
-        // console.log({ slotConfig });
-
-        await this.renderSlot(slotConfig, contentDir);
-        if (slotConfig.plugins) {
-            await this.loadPlugins(slotConfig.plugins);  // Load page-specific plugins
+    scrollToLocation() {
+        const { hash } = window.location;
+        if (hash) {
+            const targetElement = document.querySelector(hash);
+            if (targetElement) {
+                const topPosition = document.querySelector('nav')?.offsetHeight || 0;
+                const offsetPosition = targetElement.getBoundingClientRect().top + window.scrollY - topPosition;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            }
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
-    // Ensure all default plugins are loaded after page-specific plugins
-    if (this.globalConfig && this.globalConfig.default_plugins) {
-        await this.loadPlugins(this.globalConfig.default_plugins);  // Load default plugins
-    }
-}
-
-
-  async renderSlot({ slot, template, data }, dir) {
-    const slotElement = document.getElementById(slot);
-    if (!slotElement) {
-      console.error('Slot element missing:', slot);
-      return;
-    }
-
-    const dataElements = Array.isArray(data) ? data : [data];
-    const dataPromises = dataElements.map(async dataElement => {
-      // Ensure sources is defined and an array
-      const sources = Array.isArray(dataElement.sources) ? dataElement.sources : [dataElement.sources].filter(Boolean);
-
-      const sourcesPromises = sources.map(source => {
-        // Ensure source is defined and has a 'source' property
-        if (source && source.source) {
-          return this.fetchMarkdownWithFrontmatter(`${dir}/${source.source}`, source.content_name);
+    async handleLinks(event) {
+        const targetElement = event.target;
+        if (targetElement.nodeName === 'A' && !this.isExternalLink(targetElement)) {
+            event.preventDefault();
+            const targetPage = new URL(targetElement.href).searchParams.get('page') || 'home';
+            if (window.location.search !== `?page=${targetPage}`) {
+                await this.renderQuery(targetPage);
+                this.setActiveLink(targetPage);
+                window.history.pushState(null, '', `?page=${targetPage}`);
+                this.scrollToLocation();
+                this.collapseMenu();
+            }
         }
-        console.warn("Skipping undefined source:", source);
-        return Promise.resolve({}); // Return an empty object if source is invalid
-      });
-
-      const sourcesData = await Promise.all(sourcesPromises);
-      return Object.assign(dataElement, ...sourcesData);
-    });
-
-    const finalData = await Promise.all(dataPromises);
-    const templateHtml = template ? await this.fetchFile(`./templates/${template}`) : '';
-    const rendered = Mustache.render(templateHtml, { data: finalData });
-    slotElement.innerHTML = rendered;
-  }
-
-
-  async loadPlugins(pluginConfigs) {
-    for (const { path, css, js } of pluginConfigs) {
-      if (css) await this.loadCSS(`${path}/${css}`);
-      const pluginPath = `${window.location.origin}${window.location.pathname}plugins/${path}/plugin.js`;
-      const pluginModule = await import(pluginPath);
-      if (typeof pluginModule.default === 'function') pluginModule.default();
     }
-  }
 
-  loadCSS(cssPath) {
-    return new Promise((resolve, reject) => {
-      const fullPath = `${window.location.origin}${window.location.pathname}plugins/${cssPath}`;
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = fullPath;
-      link.onload = () => resolve();
-      link.onerror = () => reject();
-      document.head.appendChild(link);
-    });
-  }
+    collapseMenu() {
+        const dropCheckbox = document.getElementById('drop');
+        if (dropCheckbox && dropCheckbox.checked) {
+            dropCheckbox.checked = false;
+        }
+    }
+
+    isExternalLink(link) {
+        return new URL(link.href).host !== window.location.host;
+    }
+
+    setActiveLink(targetPage) {
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            const hrefQuery = new URLSearchParams(link.getAttribute('href')).get('page');
+            link.classList.toggle('active', hrefQuery === targetPage);
+        });
+    }
+
+    getQueryParam(param) {
+        return new URLSearchParams(window.location.search).get(param);
+    }
+
+    async fetchFile(filePath, dataType = 'text') {
+        try {
+            console.log(`Fetching file: ${filePath}`);
+            const response = await fetch(filePath);
+            if (!response.ok) throw new Error(`Failed to fetch ${filePath}`);
+            return dataType === 'json' ? await response.json() : await response.text();
+        } catch (error) {
+            console.error(`Error fetching file: ${filePath}`, error);
+            return null;
+        }
+    }
+
+    async renderQuery(path) {
+        try {
+            console.log(`Rendering query for path: ${path}`);
+            const contentDir = `content/${path}`;
+            const config = await this.fetchFile(`${contentDir}/config.json`, 'json');
+            if (!config) {
+                console.error(`No config found for path: ${path}`);
+                return;
+            }
+
+            const configArray = Array.isArray(config) ? config : [config];
+            for (const slotConfig of configArray) {
+                console.log(`Processing slotConfig:`, slotConfig);
+                await this.renderSlot(slotConfig, contentDir);
+                if (slotConfig.styles) {
+                    await this.loadStylesheets(slotConfig.styles);
+                }
+                if (slotConfig.plugins) {
+                    await this.loadPlugins(slotConfig.plugins);
+                }
+            }
+
+            if (this.globalConfig && this.globalConfig.default_plugins) {
+                await this.loadPlugins(this.globalConfig.default_plugins);
+            }
+        } catch (error) {
+            console.error("Error rendering query:", error);
+        }
+    }
+
+    async renderSlot({ slot, template, data }, dir) {
+        console.log(`Rendering slot: ${slot}, template: ${template}, data:`, data);
+        const slotElement = document.getElementById(slot); // Use getElementById for IDs
+        if (!slotElement) {
+            console.error('Slot element missing:', slot);
+            return;
+        }
+
+        const dataElements = Array.isArray(data) ? data : [data];
+        const dataPromises = dataElements.map(async dataElement => {
+            const sources = Array.isArray(dataElement.sources) ? dataElement.sources : [dataElement.sources].filter(Boolean);
+
+            const sourcesPromises = sources.map(source => {
+                if (source && source.source) {
+                    return this.fetchMarkdownWithFrontmatter(`${dir}/${source.source}`, source.content_name);
+                }
+                console.warn("Skipping undefined source:", source);
+                return Promise.resolve({});
+            });
+
+            const sourcesData = await Promise.all(sourcesPromises);
+            return Object.assign(dataElement, ...sourcesData);
+        });
+
+        const finalData = await Promise.all(dataPromises);
+        const templateHtml = template ? await this.fetchFile(`./templates/${template}`) : '';
+        const rendered = Mustache.render(templateHtml, { data: finalData });
+        slotElement.innerHTML = rendered;
+    }
+
+    async fetchMarkdownWithFrontmatter(sourceUrl, contentName) {
+        console.log(`Fetching markdown with frontmatter: ${sourceUrl}`);
+        const response = await fetch(sourceUrl);
+        const markdown = await response.text();
+        const { frontmatter, content } = this.parseFrontmatter(markdown);
+        return { ...frontmatter, [contentName]: marked.parse(content) };
+    }
+
+    parseFrontmatter(markdown) {
+        const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/.exec(markdown);
+        if (match) {
+            const frontmatter = YAML.load(match[1]);
+            const content = match[2];
+            return { frontmatter, content };
+        }
+        return { frontmatter: {}, content: markdown };
+    }
+
+    async loadPlugins(pluginConfigs) {
+        for (const { path, css, js } of pluginConfigs) {
+            if (css) await this.loadCSS(`${path}/${css}`);
+            const pluginPath = `${window.location.origin}${window.location.pathname}plugins/${path}/plugin.js`;
+            const pluginModule = await import(pluginPath);
+            if (typeof pluginModule.default === 'function') pluginModule.default();
+        }
+    }
+
+    async loadStylesheets(styles) {
+        styles = Array.isArray(styles) ? styles : [styles];
+        styles.forEach(style => {
+            const cssPath = this.fileRoot ? `${this.fileRoot}css/${style}` : `css/${style}`;
+            console.log(`Loading stylesheet: ${cssPath}`); // Debug log
+            const linkElement = document.createElement('link');
+            linkElement.rel = 'stylesheet';
+            linkElement.href = cssPath;
+            linkElement.type = 'text/css';
+            document.head.appendChild(linkElement);
+        });
+    }
+
+    loadCSS(cssPath) {
+        return new Promise((resolve, reject) => {
+            const fullPath = `${window.location.origin}${window.location.pathname}plugins/${cssPath}`;
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = fullPath;
+            link.onload = () => resolve();
+            link.onerror = () => reject();
+            document.head.appendChild(link);
+        });
+    }
 }
 
 const router = new ClientSideRouter();

@@ -8,3 +8,8 @@ body {
   display: grid;
   grid-template-columns: 1fr;
 }
+
+h1 {
+  font-size: 2rem; /* Adjust as needed */
+  margin: 1rem 0;  /* Adjust as needed */
+}

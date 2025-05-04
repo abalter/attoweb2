@@ -1,6 +1,6 @@
 [
   {
-    "slot": ".banner",
+    "slot": "banner",
     "template": "banner.html",
     "data": [
       {
